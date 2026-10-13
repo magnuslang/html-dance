@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Dance Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 20% 20%, #d9f7ff 0%, transparent 45%),
+          radial-gradient(circle at 80% 30%, #ffe8f2 0%, transparent 40%),
+          radial-gradient(circle at 50% 80%, #fff4d6 0%, transparent 50%),
+          #f7fbff;
+        overflow: hidden;
+      }
+
+      .hud {
+        position: fixed;
+        left: 16px;
+        top: 16px;
+        z-index: 1;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+      }
+
+      .stage {
+        padding: 56px;
+      }
+
+      input,
+      button {
+        margin: 10px;
+      }
+
+      input {
+        padding: 10px 12px;
+        border: 1px solid #b8c7d9;
+        border-radius: 8px;
+        min-width: 170px;
+        background: #ffffff;
+      }
+
+      button {
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #00a3cc, #3f9d55);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hud">
+      <strong>HTML Dance Demo</strong><br />
+      Inputs and buttons should start drifting and bouncing automatically.
+    </div>
+
+    <main class="stage">
+      <input type="text" placeholder="Search..." />
+      <button type="button">Search</button>
+
+      <input type="email" placeholder="name@example.com" />
+      <button type="button">Subscribe</button>
+
+      <input type="password" placeholder="Password" />
+      <button type="button">Log in</button>
+
+      <input type="number" placeholder="42" />
+      <button type="button">Calculate</button>
+
+      <input type="url" placeholder="https://example.com" />
+      <button type="button">Open Link</button>
+
+      <input type="text" placeholder="Anything else" />
+      <button type="button">Send</button>
+    </main>
+
+    <script type="module" src="./htmlDance.js"></script>
+  </body>
+</html>
