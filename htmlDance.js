@@ -5,6 +5,7 @@ const DEFAULT_MAX_SPEED = 40; // px/s
 let animationFrameId = null;
 let controls = [];
 let mounted = false;
+let mountStartTimeoutId = null;
 
 function log(message, data) {
   if (data === undefined) {
@@ -206,13 +207,32 @@ export async function mount(props = {}) {
     return;
   }
 
-  const result = startHtmlDance(props.htmlDanceOptions || {});
-  mounted = result.count > 0;
+  mounted = true;
+  const options = props.htmlDanceOptions || {};
+
+  log('start scheduled in 2000ms');
+  mountStartTimeoutId = window.setTimeout(() => {
+    mountStartTimeoutId = null;
+
+    // If unmounted during the delay, do not start animation.
+    if (!mounted) {
+      return;
+    }
+
+    startHtmlDance(options);
+  }, 2000);
 }
 
 // single-spa lifecycle: called each time app is unmounted.
 export async function unmount() {
   log('single-spa unmount called');
+
+  if (mountStartTimeoutId !== null) {
+    window.clearTimeout(mountStartTimeoutId);
+    mountStartTimeoutId = null;
+    log('canceled delayed start');
+  }
+
   stopHtmlDance();
   mounted = false;
 }
