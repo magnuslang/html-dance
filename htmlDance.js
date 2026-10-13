@@ -1,4 +1,17 @@
-const DEFAULT_SELECTORS = ["input", "button"];
+import { registerApplication } from 'https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js';
+
+registerApplication('name', loadingFn, activityFn);
+
+function loadingFn() {
+  // Make sure the resolved value of the promise is an object!
+  return System.import('name');
+}
+
+function activityFn() {
+  return true;
+}
+
+const DEFAULT_SELECTORS = ['input', 'button'];
 const DEFAULT_MIN_SPEED = 15; // px/s
 const DEFAULT_MAX_SPEED = 40; // px/s
 
@@ -42,11 +55,11 @@ function prepareControl(el, minSpeed, maxSpeed) {
   el.dataset.htmlDanceOriginalMargin = el.style.margin;
   el.dataset.htmlDanceOriginalZIndex = el.style.zIndex;
 
-  el.style.position = "fixed";
-  el.style.left = "0px";
-  el.style.top = "0px";
-  el.style.margin = "0";
-  el.style.zIndex = "9999";
+  el.style.position = 'fixed';
+  el.style.left = '0px';
+  el.style.top = '0px';
+  el.style.margin = '0';
+  el.style.zIndex = '9999';
   el.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 
   return {
@@ -61,12 +74,12 @@ function prepareControl(el, minSpeed, maxSpeed) {
 }
 
 function restoreControl(el) {
-  el.style.position = el.dataset.htmlDanceOriginalPosition || "";
-  el.style.left = el.dataset.htmlDanceOriginalLeft || "";
-  el.style.top = el.dataset.htmlDanceOriginalTop || "";
-  el.style.transform = el.dataset.htmlDanceOriginalTransform || "";
-  el.style.margin = el.dataset.htmlDanceOriginalMargin || "";
-  el.style.zIndex = el.dataset.htmlDanceOriginalZIndex || "";
+  el.style.position = el.dataset.htmlDanceOriginalPosition || '';
+  el.style.left = el.dataset.htmlDanceOriginalLeft || '';
+  el.style.top = el.dataset.htmlDanceOriginalTop || '';
+  el.style.transform = el.dataset.htmlDanceOriginalTransform || '';
+  el.style.margin = el.dataset.htmlDanceOriginalMargin || '';
+  el.style.zIndex = el.dataset.htmlDanceOriginalZIndex || '';
 
   delete el.dataset.htmlDanceOriginalPosition;
   delete el.dataset.htmlDanceOriginalLeft;
@@ -134,7 +147,7 @@ export function startHtmlDance(options = {}) {
 
   stopHtmlDance();
 
-  const selectorText = selectors.join(",");
+  const selectorText = selectors.join(',');
   const elements = Array.from(document.querySelectorAll(selectorText));
 
   controls = elements
@@ -146,7 +159,7 @@ export function startHtmlDance(options = {}) {
   }
 
   tick.lastTimestamp = 0;
-  window.addEventListener("resize", handleResize);
+  window.addEventListener('resize', handleResize);
   animationFrameId = window.requestAnimationFrame(tick);
 
   return { count: controls.length };
@@ -158,7 +171,7 @@ export function stopHtmlDance() {
     animationFrameId = null;
   }
 
-  window.removeEventListener("resize", handleResize);
+  window.removeEventListener('resize', handleResize);
 
   for (const c of controls) {
     restoreControl(c.el);
@@ -168,8 +181,8 @@ export function stopHtmlDance() {
   tick.lastTimestamp = 0;
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
     startHtmlDance();
   });
 } else {
