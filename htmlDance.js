@@ -1,22 +1,10 @@
-import { registerApplication } from 'https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js';
-
-registerApplication('name', loadingFn, activityFn);
-
-function loadingFn() {
-  // Make sure the resolved value of the promise is an object!
-  return System.import('name');
-}
-
-function activityFn() {
-  return true;
-}
-
 const DEFAULT_SELECTORS = ['input', 'button'];
 const DEFAULT_MIN_SPEED = 15; // px/s
 const DEFAULT_MAX_SPEED = 40; // px/s
 
 let animationFrameId = null;
 let controls = [];
+let mounted = false;
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
@@ -181,10 +169,23 @@ export function stopHtmlDance() {
   tick.lastTimestamp = 0;
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    startHtmlDance();
-  });
-} else {
-  startHtmlDance();
+// single-spa lifecycle: called once when app is first loaded.
+export async function bootstrap() {
+  return undefined;
+}
+
+// single-spa lifecycle: called each time app is mounted.
+export async function mount(props = {}) {
+  if (mounted) {
+    return;
+  }
+
+  const result = startHtmlDance(props.htmlDanceOptions || {});
+  mounted = result.count > 0;
+}
+
+// single-spa lifecycle: called each time app is unmounted.
+export async function unmount() {
+  stopHtmlDance();
+  mounted = false;
 }
