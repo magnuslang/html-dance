@@ -189,3 +189,12 @@ export async function unmount() {
   stopHtmlDance();
   mounted = false;
 }
+
+// Compatibility export for loaders that expect lifecycles on `module.default`.
+const lifecycles = {
+  bootstrap,
+  mount,
+  unmount,
+};
+
+export default lifecycles;
