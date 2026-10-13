@@ -6,6 +6,15 @@ let animationFrameId = null;
 let controls = [];
 let mounted = false;
 
+function log(message, data) {
+  if (data === undefined) {
+    console.log(`[htmlDance] ${message}`);
+    return;
+  }
+
+  console.log(`[htmlDance] ${message}`, data);
+}
+
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
@@ -143,6 +152,7 @@ export function startHtmlDance(options = {}) {
     .filter(Boolean);
 
   if (controls.length === 0) {
+    log('start requested, but no matching controls were found', { selectors });
     return { count: 0 };
   }
 
@@ -150,10 +160,19 @@ export function startHtmlDance(options = {}) {
   window.addEventListener('resize', handleResize);
   animationFrameId = window.requestAnimationFrame(tick);
 
+  log('started', {
+    count: controls.length,
+    selectors,
+    minSpeed,
+    maxSpeed,
+  });
+
   return { count: controls.length };
 }
 
 export function stopHtmlDance() {
+  const hadActiveAnimation = animationFrameId !== null || controls.length > 0;
+
   if (animationFrameId !== null) {
     window.cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
@@ -167,6 +186,10 @@ export function stopHtmlDance() {
 
   controls = [];
   tick.lastTimestamp = 0;
+
+  if (hadActiveAnimation) {
+    log('stopped');
+  }
 }
 
 // single-spa lifecycle: called once when app is first loaded.
@@ -176,7 +199,10 @@ export async function bootstrap() {
 
 // single-spa lifecycle: called each time app is mounted.
 export async function mount(props = {}) {
+  log('single-spa mount called');
+
   if (mounted) {
+    log('mount ignored because module is already mounted');
     return;
   }
 
@@ -186,6 +212,7 @@ export async function mount(props = {}) {
 
 // single-spa lifecycle: called each time app is unmounted.
 export async function unmount() {
+  log('single-spa unmount called');
   stopHtmlDance();
   mounted = false;
 }
@@ -196,5 +223,18 @@ const lifecycles = {
   mount,
   unmount,
 };
+
+if (typeof window !== 'undefined') {
+  window.startHtmlDance = startHtmlDance;
+  window.stopHtmlDance = stopHtmlDance;
+  window.htmlDance = {
+    start: startHtmlDance,
+    stop: stopHtmlDance,
+  };
+
+  log(
+    'loaded. global console helpers registered: window.startHtmlDance(), window.stopHtmlDance(), window.htmlDance.start(), window.htmlDance.stop()',
+  );
+}
 
 export default lifecycles;
