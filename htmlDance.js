@@ -148,7 +148,7 @@ function renderHeading() {
   headingEl.textContent = 'All your base are belong to us';
   headingEl.style.position = 'fixed';
   headingEl.style.left = '16px';
-  headingEl.style.bottom = '16px';
+  headingEl.style.top = '16px';
   headingEl.style.margin = '0';
   headingEl.style.zIndex = '10000';
 
