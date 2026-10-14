@@ -6,6 +6,7 @@ let animationFrameId = null;
 let controls = [];
 let mounted = false;
 let mountStartTimeoutId = null;
+let headingEl = null;
 
 function log(message, data) {
   if (data === undefined) {
@@ -138,6 +139,33 @@ function handleResize() {
   }
 }
 
+function renderHeading() {
+  if (headingEl) {
+    return;
+  }
+
+  headingEl = document.createElement('h1');
+  headingEl.textContent = 'All your base are belong to us';
+  headingEl.style.position = 'fixed';
+  headingEl.style.left = '16px';
+  headingEl.style.bottom = '16px';
+  headingEl.style.margin = '0';
+  headingEl.style.zIndex = '10000';
+
+  document.body.appendChild(headingEl);
+  log('rendered heading: "All your base are belong to us"');
+}
+
+function removeHeading() {
+  if (!headingEl) {
+    return;
+  }
+
+  headingEl.remove();
+  headingEl = null;
+  log('removed heading');
+}
+
 export function startHtmlDance(options = {}) {
   const selectors = options.selectors || DEFAULT_SELECTORS;
   const minSpeed = options.minSpeed ?? DEFAULT_MIN_SPEED;
@@ -210,6 +238,8 @@ export async function mount(props = {}) {
   mounted = true;
   const options = props.htmlDanceOptions || {};
 
+  renderHeading();
+
   log('start scheduled in 2000ms');
   mountStartTimeoutId = window.setTimeout(() => {
     mountStartTimeoutId = null;
@@ -234,6 +264,7 @@ export async function unmount() {
   }
 
   stopHtmlDance();
+  removeHeading();
   mounted = false;
 }
 
